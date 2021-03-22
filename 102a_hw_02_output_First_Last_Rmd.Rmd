@@ -1,0 +1,124 @@
+---
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r include=FALSE}
+source('102a_hw_02_output_First_Last_R.R')
+installed.packages("pdflatex")
+
+
+```
+
+
+
+
+
+Part 1
+
+```{r}
+
+#Dimension
+dimension=data.frame('Rows'=10,'Columns'=10) 
+#Starting and Eniding Squares Of ladder and chhute
+board = data.frame("Start"=c(1,4,9,21,28,36,51,71,80,16,47,49,56,62,64,87,93,95,98),"End"=c(38,14,31,42,84,44,67,91,100, 6,26,11,53,19,60,24,73,75,78))
+#Appending Both Dataframes
+board=append(board,dimension)
+
+board
+```
+
+Part 2
+
+```{r}
+show_board(board)
+```
+
+Part 3
+```{r}
+miniboard=data.frame('Rows'=9,'Columns'=6)
+b = data.frame("Start"=c(1,9,20,33,40,35,30,16),"End"=c(23,27,31,41,26,24,18,6))
+miniboard=append(miniboard,b)
+show_board(miniboard)
+
+
+```
+
+
+Part 4
+
+```{r}
+play_solo(board,TRUE)
+```
+
+PART 5
+
+```{r}
+total_turns=c()
+ladders=matrix(0,nrow=9)
+chuttle=matrix(0,nrow=10)
+
+for(i in 1:10000)
+    {
+    ans=play_solo(board,FALSE)
+    total_turns=append(total_turns,ans[1])
+    for(i in 1:9)
+    {
+        ladders[i]=ladders[i]+ans[i+1]
+    }
+    for(i in 1:10)
+        {
+        chuttle[i]=chuttle[i]+ans[i+10]
+        
+    }
+    
+    
+        
+}
+library(plyr)
+cat("\n Minimum no Of Turns : ",min(total_turns))
+min_turns=0
+for(i in 1:length(total_turns))
+    {
+    if(total_turns[i]==min(total_turns))
+        {
+        min_turns=min_turns+1
+    }
+}
+cat("\n \n No of Times Minimum Turns Used is ",min_turns)
+cat("\n \n The maximimu no of turns are : ",max(total_turns))
+cat("\n \n The mean of Turns is :",mean(total_turns))
+cat("\n \n The median of Turns is :",median(total_turns))
+count_hundred=0
+count_ten=0
+for(i in 1:length(total_turns))
+    {
+    if(total_turns[i]>=100)
+        {
+        count_hundred=count_hundred+1
+    }
+    if(total_turns[i]<=10)
+        {
+        count_ten=count_ten+1
+    }
+}
+cat("\n \n The proprtion that it took hundred or more than hundred turns is:  ",count_hundred/10000)
+cat("\n \nThe proprtion that it took ten or fewr turns is:  ",count_ten/10000)
+cat("\n \n The proprtion that ladder 9 is used :  ",ladders[9]/10000)
+
+hist(total_turns,col="green",breaks=50)
+barplot(as.vector(ladders)
+        ,
+main = "Ladders",
+names.arg = c("1", "2", "3", "4", "5", "6", "7","8","9"),
+col = "darkred",
+)
+barplot(as.vector(chuttle)
+        ,
+main = "Chuttle",
+names.arg = c("1", "2", "3", "4", "5", "6", "7","8","9","10"),
+col = "darkred",
+)
+```
